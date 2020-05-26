@@ -3,13 +3,14 @@ const World= Matter.World;
 
 var movingRect, stillRect;
 var engine, world;
+var weight = -1;
 function setup() {
   createCanvas(800,600);
   stillRect = createSprite(400,200, 50, 50);
   movingRect = createSprite(200,200,60,50);
   //object1 = createSprite(300,100,30,10);
   //object2 = createSprite(300,500,10,30);
-  movingRect.velocityX = 4
+  
   //object2.velocityY = -6
 
   engine = Engine.create();
@@ -17,24 +18,40 @@ function setup() {
   World.add(world,movingRect);
   World.add(world,stillRect);
   
-}rr
+}
 
 function draw() {
   background("blue");  
   Engine.update(engine);
 
-  movingRect.y = mouseY;
-  movingRect.x = mouseX;
+  //movingRect.y = mouseY;
+  //movingRect.x = mouseX;
+
+  movingRect.velocityX = 4
+
 
   isTouching();
  
   drawSprites();
+
+ 
 }
 
 function isTouching() {
-  if (movingRect.x - fixedRect.x == fixedRect.width/2 + movingRect.width/2) {
+  if (Math.abs(movingRect.x - stillRect.x) <= (stillRect.width/2 + movingRect.width/2)) {
+    console.log("yessir")
     movingRect.shapeColor = 'green';
-    stillRect.shapeColor = 'blue';
+    stillRect.shapeColor = 'red';
+    if(weight == -1){
+      weight =  Math.floor((Math.random() * 5000) + 1000);
+    }
+
+    var output = calculateDef(weight)
+
     movingRect.velocityX = 0;
+    text(output,200,200)
   }
 } 
+function calculateDef(currweight) {
+   return (movingRect.velocityX * movingRect.velocityX * 0.5 * currweight)/22500
+}
